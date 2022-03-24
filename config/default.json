@@ -1,0 +1,13 @@
+{
+    "mysql": {
+      "host": "localhost",
+      "port": 3306,
+      "user": "root",
+      "password": "",
+      "database": "test_mysql",
+      "connectionLimit": 50
+    },
+    "authenticate": {
+      "saltRounds": 10
+    }
+  }
