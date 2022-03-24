@@ -1,13 +1,14 @@
 {
-    "mysql": {
-      "host": "localhost",
-      "port": 3306,
-      "user": "root",
-      "password": "",
-      "database": "test_mysql",
-      "connectionLimit": 50
-    },
-    "authenticate": {
-      "saltRounds": 10
-    }
+  "mysql": {
+    "host": "13.213.117.90",
+    "port": 3306,
+    "user": "admin",
+    "password": "BS2jE9cZKGT96xjF",
+    "database": "eshopmb",
+    "connectionLimit": 50
+  },
+  "authenticate": {
+    "saltRounds": 10
   }
+
+} 
