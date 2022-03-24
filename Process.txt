@@ -1,0 +1,19 @@
+				Report works of Group 7
+The project starts from April 1, 2021
+
+April 1, 2021.
+
+We had a discussion in the morning about our project and we agree to meet 2 times per week.
+Khoa Dinh : 
+Phuong Pham: is doing the MySQL (15%)
+Purity is searching for more information about our website. (15%)
+Tram Vu is planning and design the client interface. (10%) 
+Tram Vu and Purity are working together for font-end.
+
+April 2,2021
+
+We are focusing on things that were assigned. 
+Phuong Pham (25%)
+Khoa Dinh ()
+Purity (35%)
+Tram Vu(20%)
