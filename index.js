@@ -4,6 +4,12 @@ const PORT = process.env.PORT || 3000;
 const imageUpload = require("./middlewares/upload");
 const userModel = require("./models/customer.model");
 var multer = require('multer');
+require("./middlewares/auth")
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
@@ -13,6 +19,8 @@ app.get("/", (req, res) => {
 //   res.send(list);
 // });
 
+app.use('/products', require('./routes/product.route'))
+app.use('/customers', require('./routes/customer.route'))
 
 /************** UPLOAD IMAGE *************************/
 app.post("/uploadImage", (req, res) => {
