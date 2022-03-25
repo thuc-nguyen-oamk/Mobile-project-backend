@@ -49,11 +49,18 @@ module.exports = {
         if (error) {
           return reject(error);
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> khoa-codes
         resolve(results);
       });
     });
   }
 
  
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> khoa-codes
