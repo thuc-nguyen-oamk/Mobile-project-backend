@@ -22,7 +22,7 @@ module.exports = {
   // },
 
   // register:(customerInfo) => {
-  //   return db.add(TABLE_NAME, customerInfo);
+  //   return db.gitadd(TABLE_NAME, customerInfo);
   // },
   getCustomersByEmail: customer_email => {
     return db.load(`select * from customer where customer_email = '${customer_email}'`);
