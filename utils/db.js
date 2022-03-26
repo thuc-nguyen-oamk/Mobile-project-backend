@@ -52,7 +52,9 @@ module.exports = {
         resolve(results);
       });
     });
-  }
+  },
+
+  pool: pool
 
  
 };

@@ -1,4 +1,5 @@
 var db = require('../utils/db');
+
 const TABLE_NAME= 'customer';
 module.exports = {
   getAllCustomer: () => {
@@ -16,7 +17,18 @@ module.exports = {
     delete  entity.customer_id;
     return db.patch(TABLE_NAME,entity,customer_id);
   },
-  addNew: (entity) => {
-    return db.add(TABLE_NAME,entity);
+  // addNew: (entity) => {
+  //   return db.add(TABLE_NAME,entity);
+  // },
+
+  // register:(customerInfo) => {
+  //   return db.add(TABLE_NAME, customerInfo);
+  // },
+  getCustomersByEmail: customer_email => {
+    return db.load(`select * from customer where customer_email = '${customer_email}'`);
   },
+  add: entity => {
+    return db.add('customer', entity);
+  },
+
 };
