@@ -7,7 +7,7 @@ var bcrypt = require('bcryptjs');
 
 const router = express.Router();
 
-let jwtSecretKeyLogin = config.jwtSecret;
+let jwtSecretKeyLogin = config.authenticate.jwtSecret;
 
 router.post("/register", async (req, res, next) => {
   console.log('req.body.customer_password',req.body.customer_password)
@@ -16,7 +16,8 @@ router.post("/register", async (req, res, next) => {
   const check = await userModel.getCustomersByEmail(req.body.customer_email);
 
   if (check.length !== 0) {
-    res.send("This email is already registered. Please use another one.");
+    res.status(400).send("This email is already registered. Please use another one.");
+    return
   }
 
   var user = {
@@ -31,21 +32,24 @@ router.post("/register", async (req, res, next) => {
 
   try {
     await userModel.add(user);
-    res.send("Registration suceeded.")
+    res.status(201).send("Registration suceeded.")
+    return
   } catch (err) {
     console.log('', err)
   }
   
 });
 
-router.post("/login", passport.authenticate("basic", { session: false }), (req, res) => {
+router.post("/login", passport.authenticate("basic.customer", { session: false }), (req, res) => {
+  const {customer_id, customer_email, customer_name, customer_address, customer_phone} = req.user
   const payload = {
-    customer_id: req.user.user,
-    customer_name: req.user.name,
+    customer_id, customer_email, customer_name, customer_address, customer_phone
   };
 
   const token = jwt.sign(payload, jwtSecretKeyLogin);
   res.json({ token });
 });
+
+
 
 module.exports = router;

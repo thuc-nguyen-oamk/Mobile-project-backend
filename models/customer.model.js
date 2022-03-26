@@ -1,4 +1,5 @@
 var db = require('../utils/db');
+const DB_NAME = "eshopmb"
 const TABLE_NAME= 'customer';
 module.exports = {
   getAllCustomer: () => {
@@ -13,5 +14,6 @@ module.exports = {
   add: entity => {
     return db.add('customer', entity);
   },
+  
 
 };
