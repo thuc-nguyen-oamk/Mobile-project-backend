@@ -23,6 +23,8 @@ app.use('/products', require('./routes/product.route'))
 app.use('/customers', require('./routes/customer.route'))
 app.use('/admin', require('./routes/admin.route'))
 app.use('/voucher', require('./routes/voucher.route'))
+app.use('/banner', require('./routes/banner.route'))
+app.use('/order', require('./routes/order.route'))
 /************** UPLOAD IMAGE *************************/
 app.post("/uploadImage", (req, res) => {
 
