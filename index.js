@@ -24,6 +24,7 @@ app.use('/customers', require('./routes/customer.route'))
 app.use('/admin', require('./routes/admin.route'))
 app.use('/voucher', require('./routes/voucher.route'))
 app.use('/categories', require('./routes/category.route'))
+app.use('/messages', require('./routes/message.route'))
 /************** UPLOAD IMAGE *************************/
 app.post("/uploadImage", (req, res) => {
 
