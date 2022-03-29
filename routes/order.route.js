@@ -59,4 +59,15 @@ router.get("/customer/:id", async function (req, res) {
   }
   res.send({ orderList: list, empty: list.length === 0 });
 });
+router.get("/:id", async function (req, res) {
+  const list = await order.getByID(req.params.id);
+  //delete customer_password
+  for (i in list) {
+    delete list[i].customer_password;
+    //console.log(order_detail_list)
+    list[i]["order_detail"]=  await order.getDetail(list[i].order_id);
+ 
+  }
+  res.send({ orderList: list, empty: list.length === 0 });
+});
 module.exports = router;
