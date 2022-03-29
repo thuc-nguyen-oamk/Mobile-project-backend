@@ -1,22 +1,22 @@
 const express = require("express");
-const voucher = require("../models/voucher.model");
+const banner = require("../models/banner.model");
 const router = express.Router();
-
+const passport = require("passport");
 router.get('/', async function (req, res) {
-    const list = await voucher.get();
+    const list = await banner.getAll();
 
-    res.send({voucherList: list, empty: list.length === 0})
+    res.send({bannerList: list, empty: list.length === 0})
 })
 
 router.post('/add', async function (req, res) {
     console.log(req.body)
-    await voucher.add(req.body)
+    await banner.add(req.body)
     res.status(200).send("Add new voucher suceeded")
 })
 
 router.delete('/delete', async function (req, res) {
    
-    await voucher.delete (req.body)
+    await banner.delete (req.body)
     res.status(200).send("Delete new voucher suceeded")
 })
 

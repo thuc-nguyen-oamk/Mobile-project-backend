@@ -1,13 +1,13 @@
 var db = require('../utils/db');
 const TABLE_NAME= 'banner';
 module.exports = {
-  getAllBanner: () => {
+  getAll: () => {
     return db.load(`select * from ${TABLE_NAME}`);
   },
-  addNew: (entity) => {
+  add: (entity) => {
     return db.add(TABLE_NAME,entity);
   },
-  delete: (banner_id) =>{
-    return db.del(TABLE_NAME,banner_id);
-  }
+  delete: (condition) => {
+    return db.del(TABLE_NAME,condition);
+  },
 };

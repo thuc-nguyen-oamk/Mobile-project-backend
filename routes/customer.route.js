@@ -51,5 +51,27 @@ router.post("/login", passport.authenticate("basic.customer", { session: false }
 });
 
 
+router.get('/', async function (req, res) {
+  const list = await userModel.getAll();
+
+  res.send({userList: list, empty: list.length === 0})
+})
+
+// router.get('/:id', async function (req, res) {
+//   const id = +req.params.id || -1;
+//   const list = await userModel.getCustomerByID(id);
+
+//   res.send({userList: list, empty: list.length === 0})
+// })
+
+router.post('/update', async function (req, res) {
+  console.log(req.body)
+  // await banner.add(req.body)
+ await userModel.updateCustomerInformation(req.body)
+
+  res.status(200).send("Update succeeded")
+})
+
+
 
 module.exports = router;
