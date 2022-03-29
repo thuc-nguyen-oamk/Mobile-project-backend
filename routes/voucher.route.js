@@ -8,13 +8,13 @@ router.get('/', async function (req, res) {
     res.send({voucherList: list, empty: list.length === 0})
 })
 
-router.post('/add', async function (req, res) {
+router.post('/add',passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
     console.log(req.body)
     await voucher.add(req.body)
     res.status(200).send("Add new voucher suceeded")
 })
 
-router.delete('/delete', async function (req, res) {
+router.delete('/delete',passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
    
     await voucher.delete (req.body)
     res.status(200).send("Delete new voucher suceeded")

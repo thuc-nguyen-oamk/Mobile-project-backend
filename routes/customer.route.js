@@ -51,7 +51,7 @@ router.post("/login", passport.authenticate("basic.customer", { session: false }
 });
 
 
-router.get('/', async function (req, res) {
+router.get('/', passport.authenticate("jwt.admin", { session: false }),async function (req, res) {
   const list = await userModel.getAll();
 
   res.send({userList: list, empty: list.length === 0})
@@ -64,7 +64,7 @@ router.get('/', async function (req, res) {
 //   res.send({userList: list, empty: list.length === 0})
 // })
 
-router.post('/update', async function (req, res) {
+router.post('/update', passport.authenticate("jwt", { session: false }), async function (req, res) {
   console.log(req.body)
   // await banner.add(req.body)
  await userModel.updateCustomerInformation(req.body)

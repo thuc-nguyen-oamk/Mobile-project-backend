@@ -3,7 +3,7 @@ const order = require("../models/order.model");
 const moment = require("moment");
 const router = express.Router();
 
-router.get("/", async function (req, res) {
+router.get("/",passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
   var list = await order.get();
   //delete customer_password
   for (i in list) {
@@ -15,7 +15,7 @@ router.get("/", async function (req, res) {
   res.send({ orderList: list, empty: list.length === 0 });
 });
 // xu ly them thoi gian va status ban dau
-router.post("/add", async function (req, res) {
+router.post("/add",passport.authenticate("jwt", { session: false }), async function (req, res) {
   //get list order_detail first then get order_information
   const order_detail=req.body.order_detail;
   delete req.body.order_detail;
@@ -40,7 +40,7 @@ router.post("/add", async function (req, res) {
 });
 
 
-router.post("/update", async function (req, res) {
+router.post("/update",passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
   console.log(req.body);
   // await banner.add(req.body)
   await order.update(req.body);
@@ -48,7 +48,7 @@ router.post("/update", async function (req, res) {
   res.status(200).send("Update succeeded");
 });
 
-router.get("/customer/:id", async function (req, res) {
+router.get("/customer/:id", passport.authenticate("jwt", { session: false }),async function (req, res) {
   const list = await order.getByCustomerID(req.params.id);
   //delete customer_password
   for (i in list) {
@@ -59,7 +59,7 @@ router.get("/customer/:id", async function (req, res) {
   }
   res.send({ orderList: list, empty: list.length === 0 });
 });
-router.get("/:id", async function (req, res) {
+router.get("/:id", passport.authenticate("jwt", { session: false }), async function (req, res) {
   const list = await order.getByID(req.params.id);
   //delete customer_password
   for (i in list) {
