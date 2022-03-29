@@ -20,22 +20,29 @@ module.exports = {
   getProductById: (product_id) => {
     return db.load(`select * 
     FROM ${TABLE_NAME_1}
-    WHERE product_id = ${product_id}
+    LEFT JOIN ${TABLE_NAME_2} ON ${TABLE_NAME_1}.product_id = ${TABLE_NAME_2}.product_id
+    WHERE ${TABLE_NAME_1}.product_id = ${product_id}
     `);
   },
   addProduct: (productInfo, callback) => {
     // return db.add(TABLE_NAME_1, productInfo);
     db.pool.query("insert into product set ?", productInfo, callback);
   },
-  addProductDetail:  (productDetailInfo) => {
-      return db.add(TABLE_NAME_2, productDetailInfo);
+  addProductDetail: (productDetailInfo) => {
+    return db.add(TABLE_NAME_2, productDetailInfo);
   },
   del: (product_id) => {
     db.del(TABLE_NAME_1, { product_id });
   },
-  edit: (product_id, newProductInfo) => {
-    return db.patch(TABLE_NAME_1, newProductInfo, {product_id});
-  }
-
+  editProduct: (newProductInfo) => {
+    const product_id = newProductInfo.product_id;
+    delete newProductInfo.product_id;
+    db.patch(TABLE_NAME_1, newProductInfo, { product_id });
+  },
+  editProductDetail: (newProductDetailInfo) => {
+    const product_detail_id = newProductDetailInfo.product_detail_id;
+    delete newProductDetailInfo.product_detail_id;
+    db.patch(TABLE_NAME_2, newProductDetailInfo, { product_detail_id });
+  },
   ///test here
 };
