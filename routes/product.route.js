@@ -8,6 +8,50 @@ const config = require("../config/default.json");
 const removeEmpty = (obj) => Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}));
 const MAX_IMAGE_PER_PRODUCT = 4;
 
+router.get("/", async function (req, res) {
+  let { category_id, product_name, product_description, product_brand } = req.query;
+  category_id = category_id?.toLowerCase() || '';
+  product_name = product_name?.toLowerCase() || '';
+  product_description = product_description?.toLowerCase() || '';
+  product_brand = product_brand?.toLowerCase() || '';
+  const products = await productModel.getAllProducts();
+  res.json(products.filter(product => {
+    return product.category_id.toString().includes(category_id)
+      && product.product_name.toLowerCase().includes(product_name)
+      && product.product_description.toLowerCase().includes(product_description)
+      && product.product_brand.toLowerCase().includes(product_brand)
+  }));
+});
+
+router.get("/brands", async function (req, res) {
+  const brands = await productModel.getAllBrands();
+  const joinedBrands = brands.reduce((acc, cur) => {
+    if (!acc.includes(cur.product_brand)) {
+      acc.push(cur.product_brand);
+    }
+    return acc;
+  }, []);
+  res.json(joinedBrands);
+});
+
+router.get("/brands/top/:howMany", async function (req, res) {
+  const howMany = +req.params.howMany;
+  const brands = await productModel.getTopBrands(howMany);
+  const joinedBrands = brands.reduce((acc, cur) => {
+    if (!acc.includes(cur.product_brand)) {
+      acc.push(cur.product_brand);
+    }
+    return acc;
+  }, []);
+  res.json(joinedBrands);
+});
+
+router.get("/details/:id", async function (req, res) {
+  const product_detail_id = +req.params.id;
+  const productDetail = await productModel.getProductDetailById(product_detail_id);
+  res.json(productDetail)
+})
+
 router.get("/:id", async function (req, res) {
   const product_id = +req.params.id || -1;
   const rows = await productModel.getProductById(product_id);
@@ -39,21 +83,6 @@ router.get("/:id", async function (req, res) {
     }
   });
   res.json(result);
-});
-
-router.get("/", async function (req, res) {
-  let { category_id, product_name, product_description, product_brand } = req.query;
-  category_id = category_id?.toLowerCase() || '';
-  product_name = product_name?.toLowerCase() || '';
-  product_description = product_description?.toLowerCase() || '';
-  product_brand = product_brand?.toLowerCase() || '';
-  const products = await productModel.getAllProducts();
-  res.json(products.filter(product => {
-    return product.category_id.toString().includes(category_id)
-      && product.product_name.toLowerCase().includes(product_name)
-      && product.product_description.toLowerCase().includes(product_description)
-      && product.product_brand.toLowerCase().includes(product_brand)
-  }));
 });
 
 router.post("/add", passport.authenticate("jwt.admin", { session: false }), async function (req, res) {

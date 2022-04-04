@@ -6,6 +6,9 @@ const userModel = require("./models/customer.model");
 var multer = require('multer');
 require("./middlewares/auth")
 const bodyParser = require("body-parser");
+const config = require("./config/default.json")
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('swagger-jsdoc');
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
@@ -19,10 +22,15 @@ app.get("/", (req, res) => {
 //   res.send(list);
 // });
 
+
+const specs = swaggerDocument(config.swagger_options);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/products', require('./routes/product.route'))
 app.use('/customers', require('./routes/customer.route'))
 app.use('/admin', require('./routes/admin.route'))
 app.use('/voucher', require('./routes/voucher.route'))
+
 app.use('/categories', require('./routes/category.route'))
 app.use('/messages', require('./routes/message.route'))
 app.use('/banner', require('./routes/banner.route'))
