@@ -29,5 +29,8 @@ module.exports = {
   getDetail:(order_id)=>{
     return db.load(`select * from ${TABLE_NAME2} INNER JOIN product_detail ON product_detail.product_detail_id = order_detail.product_detail_id 
     where order_id = ${order_id} `)
+  },
+  getByID:(order_id)=>{
+    return db.load(`select * from ${TABLE_NAME} INNER JOIN customer ON customer.customer_id =${TABLE_NAME}.customer_id where order_id=${order_id}`);
   }
 };

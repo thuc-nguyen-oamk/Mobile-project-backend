@@ -51,7 +51,7 @@ router.post("/login", passport.authenticate("basic.admin", { session: false }), 
   };
 
   const token = jwt.sign(payload, jwtSecretKeyLogin);
-  res.json({ token });
+  res.json({token });
 });
 
 
