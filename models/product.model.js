@@ -24,6 +24,12 @@ module.exports = {
     WHERE ${TABLE_NAME_1}.product_id = ${product_id}
     `);
   },
+  getProductDetailById: (product_detail_id) => {
+    return db.load(`select * 
+    FROM ${TABLE_NAME_2}
+    WHERE product_detail_id = ${product_detail_id}
+    `);
+  },
   addProduct: (productInfo, callback) => {
     // return db.add(TABLE_NAME_1, productInfo);
     db.pool.query("insert into product set ?", productInfo, callback);
@@ -43,6 +49,15 @@ module.exports = {
     const product_detail_id = newProductDetailInfo.product_detail_id;
     delete newProductDetailInfo.product_detail_id;
     db.patch(TABLE_NAME_2, newProductDetailInfo, { product_detail_id });
+  },
+  getAllBrands: () => {
+    return db.load(`select distinct product_brand from ${TABLE_NAME_1} 
+    where product_brand is not null and product_brand not like ''`);
+  },
+  getTopBrands: (howMany) => {
+    return db.load(`select product_brand, count(*) as count from ${TABLE_NAME_1}
+     where product_brand is not null and product_brand not like ''
+    group by product_brand order by count desc limit ${howMany}`);
   },
   ///test here
 };
