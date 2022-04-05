@@ -14,7 +14,7 @@
     ></script>
 
     <script>
-      const socket = io.connect('http://localhost:3000'); //mđ connect tới cùng server, ko thì const socket = io.connect('http…');
+      const socket = io.connect('https://api.uniproject.xyz/eshopmb/'); //mđ connect tới cùng server, ko thì const socket = io.connect('http…');
       socket.on("connection", (data) => {
         console.log("data from server", data);
         socket.emit("client event", { "John Doe": "I am fine, thank you" });
