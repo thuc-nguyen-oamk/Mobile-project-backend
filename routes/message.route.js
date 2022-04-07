@@ -4,6 +4,21 @@ const messageModel = require("../models/message.model");
 const router = express.Router();
 const removeEmpty = (obj) => Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}));
 
+router.get("/", passport.authenticate("jwt", { session: false }), async function (req, res) {
+  const userId = req.user.customer_id || req.user.admin_id;
+  if (req.user.customer_id) {
+    console.log("customer id:", userId);
+    // console.log(__dirname + "/views/chat.html")
+    res.sendFile('chat.html', {root: 'views/'});
+    return
+  } else if (req.user.admin_id) {
+    console.log("admin id:", userId);
+  } else {
+    console.log("user id not found");
+  }
+  res.json({msg: 'ok con de'})
+});
+
 router.get("/myMessages", passport.authenticate("jwt", { session: false }), async function (req, res) {
   const userId = req.user.customer_id || req.user.admin_id;
   const list = await messageModel.getAllMessagesOfAnUser(userId);

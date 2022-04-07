@@ -83,7 +83,7 @@ passport.use(
   "jwt.admin",
   new JwtStrategy(options, function (jwt_payload, done) {
     console.log(jwt_payload)
-    if (!jwt_payload.admin_id || jwt_payload.admin_id != config.authenticate.adminId) {
+    if (!jwt_payload.admin_id) {
       return done(null, false);
     }
     return done(null, jwt_payload);
