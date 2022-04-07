@@ -1,5 +1,6 @@
 const express = require("express");
 const order = require("../models/order.model");
+const customer=require("../models/customer.model")
 const moment = require("moment");
 const router = express.Router();
 const passport = require("passport");
@@ -386,7 +387,20 @@ router.get("/customer/:id", passport.authenticate("jwt", { session: false }),asy
  *                   
  */
 
-
+ router.get("/statics/", passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
+  const listOrder = await order.get();
+  //delete customer_password
+  const listCustomer = await customer.getAll();
+  var total=0
+  for (i in listOrder) {
+    delete listOrder[i].customer_password;
+    //console.log(order_detail_list)
+    total= total + listOrder[i]["order_total"];
+ 
+  }
+ 
+  res.send({money:total, listOrder:listOrder.length, listCustomer:listCustomer.length , listOrder2:listOrder });
+});
 router.get("/:id", passport.authenticate("jwt", { session: false }), async function (req, res) {
   const list = await order.getByID(req.params.id);
   //delete customer_password
@@ -396,6 +410,10 @@ router.get("/:id", passport.authenticate("jwt", { session: false }), async funct
     list[i]["order_detail"]=  await order.getDetail(list[i].order_id);
  
   }
+
   res.send({ orderList: list, empty: list.length === 0 });
 });
+
+
+
 module.exports = router;
