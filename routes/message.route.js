@@ -4,7 +4,11 @@ const messageModel = require("../models/message.model");
 const router = express.Router();
 const removeEmpty = (obj) => Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}));
 
-router.get("/", passport.authenticate("jwt", { session: false }), async function (req, res) {
+router.get("/", async function (req, res) {
+  res.sendFile('chat.html', {root: 'views/'});
+  return
+
+  
   const userId = req.user.customer_id || req.user.admin_id;
   if (req.user.customer_id) {
     console.log("customer id:", userId);

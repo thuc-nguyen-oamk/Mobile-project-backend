@@ -36,8 +36,8 @@
     <!-- <script src="/socket.io/socket.io.js"></script> -->
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
     <script>
-      const room = 'javascript';
-      const socket = io('https://api.uniproject.xyz/',{path: '/eshopmb/socket.io'});
+      const room = 'default';
+      const socket = io.connect('https://api.uniproject.xyz/', {path: '/eshopmb/socket.io/'});
       $('form').submit(() => {
         let msg = $('#m').val();
         socket.emit('message', { msg, room });
