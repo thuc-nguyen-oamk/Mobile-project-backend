@@ -171,6 +171,7 @@ router.get("/",passport.authenticate("jwt.admin", { session: false }), async fun
     list[i]["order_detail"]=  await order.getDetail(list[i].order_id);
  
   }
+  
   res.send({ orderList: list, empty: list.length === 0 });
 });
 // xu ly them thoi gian va status ban dau
@@ -265,7 +266,8 @@ router.post("/add",passport.authenticate("jwt", { session: false }), async funct
   //set initial status
   order_information["order_status"] = "Received";
    //set time now 
-   order_information["order_created_at"] = moment().format("YYYY-MM-DD hh:mm:ss");
+
+   order_information["order_created_at"] = moment().format("YYYY-MM-DD HH:mm:ss");
 
   const flag = await order.add(order_information);
   const new_order_id = flag.insertId;
@@ -275,8 +277,8 @@ router.post("/add",passport.authenticate("jwt", { session: false }), async funct
     order_detail[i]["order_id"]=new_order_id
     await order.addDetail(order_detail[i]);
   }
-
-  //console.log(order_detail.length)
+  
+  console.log("run")
   res.status(200).send("Add new order succeeded");
 });
 
@@ -311,7 +313,7 @@ router.post("/add",passport.authenticate("jwt", { session: false }), async funct
  */
 
 
-router.post("/update",passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
+router.post("/update", passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
   console.log(req.body);
   // await order.add(req.body)
   await order.update(req.body);
@@ -398,7 +400,7 @@ router.get("/customer/:id", passport.authenticate("jwt", { session: false }),asy
     total= total + listOrder[i]["order_total"];
  
   }
- 
+
   res.send({money:total, listOrder:listOrder.length, listCustomer:listCustomer.length , listOrder2:listOrder });
 });
 router.get("/:id", passport.authenticate("jwt", { session: false }), async function (req, res) {
