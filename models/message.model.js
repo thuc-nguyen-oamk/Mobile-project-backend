@@ -14,6 +14,11 @@ module.exports = {
     where (sender_id = ${userId} and receiver_id = ${anotherId}) or (sender_id = ${anotherId} and receiver_id = ${userId})
     order by message_created_at asc` );
   },
+  getAllCustomers: () => {
+    return db.load(`select distinct sender_id as customer_id, customer_name from ${TABLE_NAME}
+    left join customer on customer.customer_id = message.sender_id
+    where customer_name is not null`);
+  },
   single: function (id) {
     return db.load(`select * from ${TABLE_NAME} where message_id = ${id}`);
   },

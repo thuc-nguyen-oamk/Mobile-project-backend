@@ -84,6 +84,7 @@ passport.use(
   new JwtStrategy(options, function (jwt_payload, done) {
     console.log(jwt_payload)
     if (!jwt_payload.admin_id) {
+      console.log('jwt_payload.admin_id is undefined')
       return done(null, false);
     }
     return done(null, jwt_payload);

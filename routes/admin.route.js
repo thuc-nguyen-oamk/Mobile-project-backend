@@ -51,6 +51,8 @@ router.post("/login", passport.authenticate("basic.admin", { session: false }), 
   };
 
   const token = jwt.sign(payload, jwtSecretKeyLogin);
+  req.app.locals.adminId = admin_id
+  console.log("req.app.locals.adminId:", req.app.locals.adminId);
   res.json({payload,token });
   
 });

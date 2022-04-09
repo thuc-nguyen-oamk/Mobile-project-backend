@@ -4,24 +4,14 @@ const messageModel = require("../models/message.model");
 const router = express.Router();
 const removeEmpty = (obj) => Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}));
 
-router.get("/", async function (req, res) {
-  res.sendFile('chat.html', {root: 'views/'});
-  return
+router.get("/userList", passport.authenticate("jwt.admin", { session: false }), async (req, res) => {
+  const users = await messageModel.getAllCustomers();
+  res.json(users);
+})
 
-  
-  const userId = req.user.customer_id || req.user.admin_id;
-  if (req.user.customer_id) {
-    console.log("customer id:", userId);
-    // console.log(__dirname + "/views/chat.html")
-    res.sendFile('chat.html', {root: 'views/'});
-    return
-  } else if (req.user.admin_id) {
-    console.log("admin id:", userId);
-  } else {
-    console.log("user id not found");
-  }
-  res.json({msg: 'ok con de'})
-});
+router.get('/adminId', passport.authenticate("jwt", { session: false }), async function (req, res) {
+  res.json({adminId: req.app.locals.adminId})
+})
 
 router.get("/myMessages", passport.authenticate("jwt", { session: false }), async function (req, res) {
   const userId = req.user.customer_id || req.user.admin_id;
@@ -43,7 +33,8 @@ router.get("/:id", async function (req, res) {
 });
 
 router.post("/", passport.authenticate("jwt", { session: false }), async function (req, res) {
-  const {sender_id, receiver_id} = req.body;
+  const {receiver_id} = req.body;
+  const sender_id = req.user.customer_id || req.user.admin_id;
   if (sender_id == receiver_id) {
     res.status(400).json({
       message: "Cannot send message to yourself",
