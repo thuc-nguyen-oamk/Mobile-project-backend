@@ -32,14 +32,13 @@ router.post("/register", async (req, res, next) => {
     admin_phone: req.body.admin_phone,
   };
 
-  console.log('user',user)
-
+ 
   try {
     await userModel.add(user);
     res.status(201).send("Registration suceeded.")
     return
   } catch (err) {
-    console.log('', err)
+ 
   }
   
 });

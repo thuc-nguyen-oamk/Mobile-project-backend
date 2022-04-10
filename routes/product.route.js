@@ -53,7 +53,7 @@ router.get("/details/:id", async function (req, res) {
 })
 router.get("/all", passport.authenticate("jwt.admin", { session: false }),async function (req, res) {
   const listProducts = await productModel.getAllProducts();
-  console.log(typeof(listProducts))
+
   res.send({list:listProducts});
 });
 router.get("/:id", async function (req, res) {
@@ -73,6 +73,8 @@ router.get("/:id", async function (req, res) {
         product_brand: row.product_brand,
         product_image: row.display_image,
         category_name: row.category_name,
+        display_price: row.display_price,
+        display_price_discounted: row.display_price_discounted,
         details: [],
       };
       result.push(index[row.product_id]);
@@ -203,6 +205,8 @@ router.put("/detail", passport.authenticate("jwt.admin", { session: false }), as
     }
   });
 });
+
+
 
 
 module.exports = router;
