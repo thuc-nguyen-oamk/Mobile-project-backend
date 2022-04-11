@@ -94,8 +94,10 @@ router.get("/:id", async function (req, res) {
 });
 
 router.post("/add", passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
+  console.log(req.body)
   const { category_id, product_name, product_description, product_brand } = req.body;
   const productInfo = { category_id, product_name, product_description, product_brand };
+ 
   removeEmpty(productInfo);
   productModel.addProduct(productInfo, (err, dbResult) => {
     if (err) {
@@ -107,7 +109,8 @@ router.post("/add", passport.authenticate("jwt.admin", { session: false }), asyn
 });
 
 router.post("/addDetail", passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
-  imageUpload.array("product_images", MAX_IMAGE_PER_PRODUCT)(req, res, function (err) {
+  imageUpload.single("product_images")(req, res, function (err) {
+
     if (err instanceof multer.MulterError) {
       console.log(err);
       res.sendStatus(400);
@@ -116,10 +119,11 @@ router.post("/addDetail", passport.authenticate("jwt.admin", { session: false })
       res.sendStatus(500);
     } else {
       const { product_id, product_color, product_price, product_price_discounted, product_stock } = req.body;
-      let product_images = req.files.reduce((acc, cur) => acc + cur.filename + ",", "");
-      if (product_images.endsWith(",")) product_images = product_images.slice(0, -1)
-      const productDetailInfo = { product_id, product_color, product_price, product_price_discounted, product_stock, product_images };
+      // let product_images = req.files.reduce((acc, cur) => acc + cur.filename + ",", "");
+      // if (product_images.endsWith(",")) product_images = product_images.slice(0, -1)
+      const productDetailInfo = { product_id, product_color, product_price, product_price_discounted, product_stock,   product_images:req.file.filename };
       productModel.addProductDetail(productDetailInfo);
+      console.log(productDetailInfo)
       res.status(201).json({ message: "Add product detail successfully." });
     }
   });
@@ -197,7 +201,8 @@ router.put("/", passport.authenticate("jwt.admin", { session: false }), async fu
 });
 
 router.put("/detail", passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
-  imageUpload.array("product_images", MAX_IMAGE_PER_PRODUCT)(req, res, function (err) {
+  
+  imageUpload.single("product_images")(req, res, function (err) {
     if (err instanceof multer.MulterError) {
       console.log(err);
       res.sendStatus(400);
@@ -205,17 +210,19 @@ router.put("/detail", passport.authenticate("jwt.admin", { session: false }), as
       console.log(err);
       res.sendStatus(500);
     } else {
+      console.log(req.body)
       const { product_detail_id, product_color, product_price, product_price_discounted, product_stock } = req.body;
-      let product_images = req.files.reduce((acc, cur) => acc + cur.filename + ",", "");
-      if (product_images.endsWith(",")) product_images = product_images.slice(0, -1)
+      // let product_images = req.files.reduce((acc, cur) => acc + cur.filename + ",", "");
+      // if (product_images.endsWith(",")) product_images = product_images.slice(0, -1)
       const newProductDetailInfo = {
         product_detail_id,
         product_color,
         product_price,
         product_price_discounted,
         product_stock,
-        product_images,
+        product_images:req.file.filename
       };
+      console.log(newProductDetailInfo)
       productModel.editProductDetail(newProductDetailInfo);
       res.status(200).json({ message: "Edit product detail successfully." });
     }
