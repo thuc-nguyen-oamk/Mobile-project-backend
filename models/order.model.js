@@ -6,8 +6,7 @@ module.exports = {
   get: () => {
     return db.load(`select * from ${TABLE_NAME} 
     INNER JOIN customer ON customer.customer_id =${TABLE_NAME}.customer_id 
-   
-    ORDER BY order_created_at DESC`);
+    ORDER BY order_created_at DESC;`);
   },
   add: (entity) => {
     return db.add(TABLE_NAME,entity);
