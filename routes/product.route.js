@@ -169,15 +169,31 @@ router.delete("/", passport.authenticate("jwt.admin", { session: false }), async
 });
 
 router.put("/", passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
-  const { product_id, category_id, product_name, product_description, product_brand } = req.body;
-  const newProductInfo = { product_id, category_id, product_name, product_description, product_brand };
-  removeEmpty(newProductInfo);
-  if (!newProductInfo || Object.keys(newProductInfo).length === 0) {
-    res.status(400).json({ message: "Missing product info." });
-    return;
-  }
-  await productModel.editProduct(newProductInfo);
-  res.status(200).json({ message: "Edit product successfully." });
+  console.log("hihihih")
+  imageUpload.single("myImage")(req, res, async function (err) {
+   
+    if (err instanceof multer.MulterError) {
+      console.log(err);
+      return err;
+    } else if (err) {
+      console.log(err);
+      return err;
+    }
+    console.log(req.file.filename)
+    
+      const { product_id, category_id, product_name, product_description, product_brand, display_price, display_price_discounted } = req.body;
+      const newProductInfo = { product_id, category_id, product_name, product_description, product_brand, display_price, display_price_discounted,display_image:req.file.filename  };
+     console.log(newProductInfo)
+      removeEmpty(newProductInfo);
+      if (!newProductInfo || Object.keys(newProductInfo).length === 0) {
+        res.status(400).json({ message: "Missing product info." });
+        return;
+      }
+      await productModel.editProduct(newProductInfo);
+      res.status(200).json({ message: "Edit product successfully." });
+    
+  });
+ 
 });
 
 router.put("/detail", passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
