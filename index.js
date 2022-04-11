@@ -52,29 +52,4 @@ const server = app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
 
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  }
-});
-
-
-io.on("connection", (socket) => {
-  console.log("a user connected");
-  socket.on("join", (data) => {
-    socket.join(data.room);
-    // io.in(data.room).emit("message", `New user joined ${data.room} room!`);
-  });
-
-  socket.on("message", (data) => {
-    console.log(`message: ${data.msg}`);
-    io.in(data.room).emit("message", data.msg);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-
-    // io.emit("message", "user disconnected");
-  });
-});
+require('./utils/socketio')(server)

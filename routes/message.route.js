@@ -10,7 +10,7 @@ router.get("/userList", passport.authenticate("jwt.admin", { session: false }), 
 })
 
 router.get('/adminId', passport.authenticate("jwt", { session: false }), async function (req, res) {
-  res.json({adminId: req.app.locals.adminId})
+  res.json({adminId: global.adminId})
 })
 
 router.get("/myMessages", passport.authenticate("jwt", { session: false }), async function (req, res) {
