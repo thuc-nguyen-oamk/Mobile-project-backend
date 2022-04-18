@@ -91,7 +91,7 @@ router.get('/', async function (req, res) {
 
 router.post('/add',passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
   
-    imageUpload.single("myImage")(req, res, function (err) {
+    imageUpload.single("myImage")(req, res, async function (err) {
    
         if (err instanceof multer.MulterError) {
           console.log(err);
