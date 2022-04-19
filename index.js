@@ -12,6 +12,7 @@ const swaggerDocument = require("swagger-jsdoc");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("assets"));
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
