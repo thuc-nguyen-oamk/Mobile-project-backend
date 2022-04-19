@@ -43,7 +43,6 @@ module.exports = function configSocketIO(server) {
     socket.on("admin join", (data) => {
       console.log("data from admin client:", data);
       let token = data.token;
-      token = token.replace(/"/g, "");
       const decoded = jwt.decode(token);
       console.log("decoded:", decoded);
 
@@ -56,6 +55,7 @@ module.exports = function configSocketIO(server) {
 
       const adminId = decoded.admin_id;
       const customerId = data.customer_id
+      console.log("customerId:", customerId);
       messageModel.getAllMessagesOfAConversation(adminId, customerId, (err, messageList) => {
         if (err) {
           console.log(err);
