@@ -50,7 +50,7 @@ let jwtSecretKeyLogin = config.authenticate.jwtSecret;
   */
 
 router.post("/register", async (req, res, next) => {
-  console.log('req.body.customer_password',req.body.customer_password)
+
   var hash = bcrypt.hashSync(req.body.customer_password, bcrypt.genSaltSync(config["authenticate"].saltRounds));
 
   const check = await userModel.getCustomersByEmail(req.body.customer_email);
@@ -68,14 +68,14 @@ router.post("/register", async (req, res, next) => {
     customer_phone: req.body.customer_phone,
   };
 
-  console.log('user',user)
+
 
   try {
     await userModel.add(user);
     res.status(201).send("Registration suceeded.")
     return
   } catch (err) {
-    console.log('', err)
+   
   }
   
 });
@@ -170,7 +170,7 @@ router.get('/', passport.authenticate("jwt.admin", { session: false }),async fun
  */
 
 router.post('/update', passport.authenticate("jwt", { session: false }), async function (req, res) {
-  console.log(req.body)
+
   // await customer.add(req.body)
  await userModel.updateCustomerInformation(req.body)
 

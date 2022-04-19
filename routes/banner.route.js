@@ -2,7 +2,8 @@ const express = require("express");
 const banner = require("../models/banner.model");
 const router = express.Router();
 const passport = require("passport");
-
+var multer = require("multer");
+const imageUpload = require("../middlewares/upload");
 /**
  * @swagger
  * components:
@@ -90,9 +91,23 @@ router.get('/', async function (req, res) {
 
 
 router.post('/add',passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
-    console.log(req.body)
-    await banner.add(req.body)
-    res.status(200).send("Add new voucher suceeded")
+  
+    imageUpload.single("myImage")(req, res, async function (err) {
+   
+        if (err instanceof multer.MulterError) {
+          console.log(err);
+          return err;
+        } else if (err) {
+          console.log(err);
+          return err;
+        }
+    
+        console.log(req.file.filename);
+        await banner.add({banner_image:req.file.filename})
+       return res.status(200).send("Add new voucher suceeded")
+        
+      });
+
 })
 
 

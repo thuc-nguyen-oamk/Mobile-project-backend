@@ -13,6 +13,7 @@ const swaggerDocument = require("swagger-jsdoc");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(require("cors")());
+
 app.use(express.static("assets"));
 
 app.get("/", (req, res) => {
@@ -31,6 +32,7 @@ app.use("/products", require("./routes/product.route"));
 app.use("/customers", require("./routes/customer.route"));
 app.use("/admin", require("./routes/admin.route"));
 app.use("/voucher", require("./routes/voucher.route"));
+
 app.use("/categories", require("./routes/category.route"));
 app.use("/messages", require("./routes/message.route"));
 app.use("/banner", require("./routes/banner.route"));
@@ -40,11 +42,14 @@ app.post("/uploadImage", (req, res) => {
   imageUpload.single("myImage")(req, res, function (err) {
     if (err instanceof multer.MulterError) {
       console.log(err);
+      return err;
     } else if (err) {
       console.log(err);
-    } else {
-      console.log("it's ok");
+      return err;
     }
+
+    console.log(req.file.filename);
+    return res.send("Upload image succedded");
   });
 });
 
