@@ -32,7 +32,7 @@ module.exports = {
     return db.load(`select distinct sender_id as customer_id, customer_name, get_last_message(sender_id) as last_message,
     get_last_message_created_at(sender_id) as last_message_created_at
     from ${TABLE_NAME} left join customer on customer.customer_id = message.sender_id
-    where customer_name is not null`);
+    where customer_name is not null order by get_last_message_created_at(sender_id) desc`);
   },
   single: function (id) {
     return db.load(`select * from ${TABLE_NAME} where message_id = ${id}`);

@@ -13,7 +13,7 @@ module.exports = function configSocketIO(server) {
   global.io.on("connection", async (socket) => {
     console.log("a user connected");
 
-    socket.on("customer join", (data) => {
+    socket.on("chat: customer join", (data) => {
       console.log("data from client:", data);
       let token = data.token;
       token = token.replace(/"/g, "");
@@ -34,42 +34,61 @@ module.exports = function configSocketIO(server) {
           console.log(err);
         } else {
           console.log("messageList:", messageList);
-          global.io.to(socket.id).emit("join", { messageList });
+          global.io.to(socket.id).emit("chat: join", { messageList });
           socket.join(customerId);
         }
       });
     });
 
-    socket.on("admin join", (data) => {
+    socket.on("notifications: admin new message", (data) => {
       console.log("data from admin client:", data);
       let token = data.token;
+      token = token.replace(/"/g, "");
       const decoded = jwt.decode(token);
       console.log("decoded:", decoded);
 
       if (!decoded || !decoded.admin_id) {
         console.error(`Wrong token from ${socket.id}`);
-        io.to(socket.id).emit("force disconnect", { msg: "Unauthorized." });
+        io.to(socket.id).emit("chat: force disconnect", { msg: "Unauthorized." });
+        socket.disconnect(true);
+        return;
+      }
+
+      global.adminSocketId = socket.id;
+      console.log("global.adminSocketId:", global.adminSocketId);
+    })
+
+    socket.on("chat: admin join", (data) => {
+      console.log("data from admin client:", data);
+      let token = data.token;
+      token = token.replace(/"/g, "");
+      const decoded = jwt.decode(token);
+      console.log("decoded:", decoded);
+
+      if (!decoded || !decoded.admin_id) {
+        console.error(`Wrong token from ${socket.id}`);
+        io.to(socket.id).emit("chat: force disconnect", { msg: "Unauthorized." });
         socket.disconnect(true);
         return;
       }
 
       const adminId = decoded.admin_id;
       const customerId = data.customer_id
-      console.log("customerId:", customerId);
       messageModel.getAllMessagesOfAConversation(adminId, customerId, (err, messageList) => {
         if (err) {
           console.log(err);
         } else {
           console.log("messageList:", messageList);
-          global.io.to(socket.id).emit("join", { messageList });
+          global.io.to(socket.id).emit("chat: join", { messageList });
           socket.join(customerId)
         }
       });
     });
 
-    socket.on("message", (data) => {
+    socket.on("chat: message", (data) => {
       console.log('[socket on msg] data:', data);
-      global.io.in(data.room).emit("message", data);
+      global.io.in(data.room).emit("chat: message", data);
+      global.io.to(global.adminSocketId).emit("notifications: admin new message", data);
       const {sender_id, receiver_id, message_text} = data
       messageModel.add({sender_id, receiver_id, message_text})
     });
