@@ -12,6 +12,7 @@ module.exports = {
       callback
     );
   },
+  // A conversation consists of 2 partners
   getAllMessagesOfAConversation: function (userId, anotherId, callback) {
     return db.pool.query(
       `select * from ${TABLE_NAME}
@@ -20,6 +21,7 @@ module.exports = {
       callback
     );
   },
+  // A conversation consists of 2 partners
   getLastMessageOfAConversation: function (userId, anotherId, callback) {
     return db.pool.query(
       `select * from ${TABLE_NAME}
@@ -28,6 +30,7 @@ module.exports = {
       callback
     );
   },
+  // Only customers that have conversations with admin can be retrieved because the base table in db is the message table.
   getAllCustomersWithLastMessage: () => {
     return db.load(`select distinct sender_id as customer_id, customer_name, get_last_message(sender_id) as last_message,
     get_last_message_created_at(sender_id) as last_message_created_at

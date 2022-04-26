@@ -14,6 +14,7 @@ app.use(passport.initialize());
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 
+// Passport strategy for authenticating a customer with email and password
 passport.use(
   "basic.customer",
   new BasicStrategy(async (email, password, done) => {
@@ -37,6 +38,7 @@ passport.use(
   })
 );
 
+// Passport strategy for authenticating the admin with email and password
 passport.use(
   "basic.admin",
   new BasicStrategy(async (email, password, done) => {
@@ -71,6 +73,7 @@ let options = {
   secretOrKey: jwtSecretKey,
 };
 
+// Passport strategy for authenticating a customer with json web token
 passport.use(
   "jwt",
   new JwtStrategy(options, function (jwt_payload, done) {
@@ -79,6 +82,7 @@ passport.use(
   })
 );
 
+// Passport strategy for authenticating the admin with json web token
 passport.use(
   "jwt.admin",
   new JwtStrategy(options, function (jwt_payload, done) {

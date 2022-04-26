@@ -15,9 +15,11 @@ module.exports = function configSocketIO(server) {
 
     socket.on("chat: customer join", (data) => {
       let token = data.token;
+      // Forgot to call JSON.parse on AsyncStorage.getItem may lead to redundant double quotes
       token = token.replace(/"/g, "");
       const decoded = jwt.decode(token);
 
+      // The token is in invalid format or it does not contain customer_id
       if (!decoded || !decoded.customer_id) {
         console.error(`Wrong token from ${socket.id}`);
         io.to(socket.id).emit("force disconnect", { msg: "Unauthorized." });
@@ -27,6 +29,8 @@ module.exports = function configSocketIO(server) {
 
       const customerId = decoded.customer_id;
       const adminId = global.adminId || config.authenticate.adminId;
+
+      // A conversation consists of 2 partners
       messageModel.getAllMessagesOfAConversation(customerId, adminId, (err, messageList) => {
         if (err) {
           console.error(err);
@@ -39,9 +43,11 @@ module.exports = function configSocketIO(server) {
 
     socket.on("notifications: admin new message", (data) => {
       let token = data.token;
+      // Forgot to call JSON.parse on AsyncStorage.getItem may lead to redundant double quotes
       token = token.replace(/"/g, "");
       const decoded = jwt.decode(token);
 
+      // The token is in invalid format or it does not contain admin_id
       if (!decoded || !decoded.admin_id) {
         console.error(`Wrong token from ${socket.id}`);
         io.to(socket.id).emit("chat: force disconnect", { msg: "Unauthorized." });
@@ -49,14 +55,17 @@ module.exports = function configSocketIO(server) {
         return;
       }
 
+      // Save the admin's socket id globally so that it can be used to send messages to the admin
       global.adminSocketId = socket.id;
     });
 
     socket.on("chat: admin join", (data) => {
       let token = data.token;
+      // Forgot to call JSON.parse on AsyncStorage.getItem may lead to redundant double quotes
       token = token.replace(/"/g, "");
       const decoded = jwt.decode(token);
 
+      // The token is in invalid format or it does not contain admin_id
       if (!decoded || !decoded.admin_id) {
         console.error(`Wrong token from ${socket.id}`);
         io.to(socket.id).emit("chat: force disconnect", { msg: "Unauthorized." });
@@ -66,6 +75,8 @@ module.exports = function configSocketIO(server) {
 
       const adminId = decoded.admin_id;
       const customerId = data.customer_id;
+
+      // A conversation consists of 2 partners
       messageModel.getAllMessagesOfAConversation(adminId, customerId, (err, messageList) => {
         if (err) {
           console.error(err);
@@ -80,6 +91,7 @@ module.exports = function configSocketIO(server) {
       global.io.in(data.room).emit("chat: message", data);
       global.io.to(global.adminSocketId).emit("notifications: admin new message", data);
       const { sender_id, receiver_id, message_text } = data;
+      // Save the new message to the database
       messageModel.add({ sender_id, receiver_id, message_text });
     });
 
