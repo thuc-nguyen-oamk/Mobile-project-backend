@@ -8,6 +8,7 @@ module.exports = {
     return db.load(`select * 
     FROM ${TABLE_NAME_1}
     INNER JOIN category ON category.category_id = product.category_id
+    ORDER BY product_id DESC
     `);
   },
   getAllProductDetail: (product_id) => {
@@ -19,7 +20,7 @@ module.exports = {
     `);
   },
   getProductById: (product_id) => {
-    return db.load(`select * 
+    return db.load(`select *, ${TABLE_NAME_1}.product_id as product_id
     FROM ${TABLE_NAME_1}
     LEFT JOIN ${TABLE_NAME_2} ON ${TABLE_NAME_1}.product_id = ${TABLE_NAME_2}.product_id
     INNER JOIN category ON ${TABLE_NAME_1}.category_id = category.category_id

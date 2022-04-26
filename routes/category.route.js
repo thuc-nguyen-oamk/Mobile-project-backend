@@ -6,16 +6,74 @@ const imageUpload = require("../middlewares/upload");
 const router = express.Router();
 const removeEmpty = (obj) => Object.keys(obj).forEach((key) => (obj[key] === undefined ? delete obj[key] : {}));
 
+/**
+  * @swagger
+  * tags:
+  *   name: Categories
+  *   description: The category managing API
+  */
+
+/**
+ * @swagger
+ * /categories:
+ *   get:
+ *     summary: Get all categories
+ *     tags: [Categories]
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Product'
+ */
+
 router.get("/", async function (req, res) {
   const list = await categoryModel.all();
   res.json(list);
 });
+
+/**
+ * @swagger
+ * /categories/{id}:
+ *   get:
+ *     summary: Get a categoriy by id
+ *     tags: [Categories]
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Product'
+ */
 
 router.get("/:id", async function (req, res) {
   const category_id = req.params.id;
   const list = await categoryModel.single(category_id);
   res.json(list);
 });
+
+/**
+ * @swagger
+ * /categories:
+ *   post:
+ *     summary: Add a catgory
+ *     tags: [Categories]
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Product'
+ */
 
 router.post("/", passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
   imageUpload.single("category_image")(req, res, async function (err) {
@@ -39,6 +97,23 @@ router.post("/", passport.authenticate("jwt.admin", { session: false }), async f
   });
 });
 
+/**
+ * @swagger
+ * /categories:
+ *   put:
+ *     summary: Edit a category
+ *     tags: [Categories]
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Product'
+ */
+
 router.put("/", passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
   imageUpload.single("category_image")(req, res, async function (err) {
     if (err) {
@@ -50,6 +125,23 @@ router.put("/", passport.authenticate("jwt.admin", { session: false }), async fu
     res.json({ message: "Edit category success !" });
   });
 });
+
+/**
+ * @swagger
+ * /categories:
+ *   delete:
+ *     summary: Delete a category
+ *     tags: [Categories]
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Product'
+ */
 
 router.delete("/", passport.authenticate("jwt.admin", { session: false }), async function (req, res) {
   const {category_id} = req.body;

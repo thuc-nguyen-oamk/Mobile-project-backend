@@ -20,10 +20,19 @@ module.exports = {
       callback
     );
   },
-  getAllCustomers: () => {
-    return db.load(`select distinct sender_id as customer_id, customer_name from ${TABLE_NAME}
-    left join customer on customer.customer_id = message.sender_id
-    where customer_name is not null`);
+  getLastMessageOfAConversation: function (userId, anotherId, callback) {
+    return db.pool.query(
+      `select * from ${TABLE_NAME}
+      where (sender_id = ${userId} and receiver_id = ${anotherId}) or (sender_id = ${anotherId} and receiver_id = ${userId})
+      order by message_created_at desc limit 1`,
+      callback
+    );
+  },
+  getAllCustomersWithLastMessage: () => {
+    return db.load(`select distinct sender_id as customer_id, customer_name, get_last_message(sender_id) as last_message,
+    get_last_message_created_at(sender_id) as last_message_created_at
+    from ${TABLE_NAME} left join customer on customer.customer_id = message.sender_id
+    where customer_name is not null order by get_last_message_created_at(sender_id) desc`);
   },
   single: function (id) {
     return db.load(`select * from ${TABLE_NAME} where message_id = ${id}`);
