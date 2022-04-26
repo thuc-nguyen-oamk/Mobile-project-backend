@@ -177,6 +177,14 @@ router.post('/update', passport.authenticate("jwt", { session: false }), async f
   res.status(200).send("Update succeeded")
 })
 
-
+router.get('/:id', passport.authenticate("jwt.admin", { session: false }),async function (req, res) {
+  const id = +req.params.id || -1;
+  const list = await userModel.single(id);
+ for (i in list )
+ {
+   delete list[i].customer_password
+ }
+  res.send({userList: list, empty: list.length === 0})
+})
 
 module.exports = router;

@@ -30,5 +30,7 @@ module.exports = {
   add: entity => {
     return db.add('customer', entity);
   },
-
+  single: (id) => {
+    return db.load(`select * from ${TABLE_NAME} where customer_id = ${id}`);
+  },
 };
